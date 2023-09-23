@@ -157,17 +157,14 @@ public final class HttpProxyHandler extends ProxyHandler {
 
         String hostString = HttpUtil.formatHostnameForHttp(raddr);
         int port = raddr.getPort();
-        String url = hostString + ":" + port;
-        String hostHeader = (ignoreDefaultPortsInConnectHostHeader && (port == 80 || port == 443)) ?
-                hostString :
-                url;
+        String authority = hostString + ':' + port;
 
         FullHttpRequest req = new DefaultFullHttpRequest(
                 HttpVersion.HTTP_1_1, HttpMethod.CONNECT,
-                url,
+                authority,
                 Unpooled.EMPTY_BUFFER, false);
 
-        req.headers().set(HttpHeaderNames.HOST, hostHeader);
+        req.headers().set(HttpHeaderNames.HOST, authority);
 
         if (authorization != null) {
             req.headers().set(HttpHeaderNames.PROXY_AUTHORIZATION, authorization);
